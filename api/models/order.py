@@ -1,5 +1,6 @@
 from datetime import datetime
-from api.app import db
+from models.database import db
+from models.review import Review
 
 
 class Order(db.Model):
@@ -30,8 +31,10 @@ class Order(db.Model):
     user = db.relationship('User', back_populates='orders')
     order_items = db.relationship(
         'OrderItem', back_populates='order', cascade="all, delete-orphan")
+    reviews = db.relationship('Review', back_populates='order')
+    # reviews = db.relationship('Review', backref='order', lazy=True)
 
-    def __init__(self, user_id, delivery_date, total_price, payment_status, pickup_status, pickup_address, pickup_date_scheduled, pickup_date_actual, order_reference_code=None, invoice=None, payment_method=None, number_of_items=None, booking_date=None, booking_status='Pending'):
+    def __init__(self, user_id, delivery_date, total_price, packed, payment_status, pickup_status, pickup_address, pickup_date_scheduled, pickup_date_actual, order_reference_code=None, invoice=None, payment_method=None, number_of_items=None, booking_date=None, booking_status='Pending'):
         self.user_id = user_id
         self.delivery_date = delivery_date
         self.order_reference_code = order_reference_code
@@ -41,12 +44,14 @@ class Order(db.Model):
         self.order_reference = f"ORDER-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
         self.booking_date = booking_date if booking_date else datetime.utcnow()
         self.booking_status = booking_status
+        self.order_date = datetime.utcnow()
         self.total_price = total_price
         self.payment_status = payment_status
         self.pickup_date_scheduled = pickup_date_scheduled
         self.pickup_date_actual = pickup_date_actual
         self.pickup_address = pickup_address
         self.pickup_status = pickup_status
+        self.packed = packed
 
     def __str__(self):
         return f"Order {self.order_reference} by {self.user.username}"

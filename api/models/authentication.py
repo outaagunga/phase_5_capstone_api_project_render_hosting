@@ -6,8 +6,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
-from api.models.user import User
-from api.app import app
+from models.user import User
+from models.database import app
 
 
 # Decorator that defines @token_required
