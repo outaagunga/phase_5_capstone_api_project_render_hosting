@@ -7,6 +7,7 @@ import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 from models.database import app
+from routes.order_route import *
 from models.routes import *
 from models.authentication import *
 
