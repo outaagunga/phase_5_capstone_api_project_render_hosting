@@ -6,8 +6,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
-from models.database import db, app
+from models.database import app
 from models.routes import *
+from models.authentication import *
 
 
 if __name__ == '__main__':
