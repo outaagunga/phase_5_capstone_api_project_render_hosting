@@ -1,5 +1,6 @@
 # app.py
 from flask import jsonify, request
+
 from flask import request, jsonify, make_response, session
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
