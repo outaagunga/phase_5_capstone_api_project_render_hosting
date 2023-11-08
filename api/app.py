@@ -10,6 +10,9 @@ from models.database import app
 from routes.order_route import *
 from models.routes import *
 from models.authentication import *
+from routes.user_route import *
+from routes.storagespace_route import *
+from routes.review_route import *
 
 
 if __name__ == '__main__':
