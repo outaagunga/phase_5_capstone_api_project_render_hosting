@@ -15,6 +15,7 @@ pyjwt = "*"
 psycopg2-binary = "*"
 cors = "*"
 flask-cors = "*"
+marshmallow = "*"
 
 [dev-packages]
 

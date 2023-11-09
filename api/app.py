@@ -7,15 +7,20 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
-from models.database import app
-from routes.order_route import *
-from models.routes import *
-from models.authentication import *
+from models.main import app
+from routes.deliveries_route import *
+from routes.transactions_route import *
+from routes.inventory_route import *
+from routes.pickups_route import *
+from routes.receipts_route import *
+from routes.shippings_route import *
+from routes.stored_items_route import *
+from routes.warehouse_route import *
 from routes.user_route import *
-from routes.storagespace_route import *
-from routes.review_route import *
 
+
+from models.user import User
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host='0.0.0.0')
+    app.run(debug=True)
+    # app.run(host='0.0.0.0')

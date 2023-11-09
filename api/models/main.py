@@ -2,6 +2,8 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_migrate import Migrate
+import marshmallow
+from flask_marshmallow import Marshmallow
 
 
 app = Flask(__name__)
@@ -14,3 +16,4 @@ db = SQLAlchemy()
 CORS(app)
 db.init_app(app)
 migrate = Migrate(app, db)
+ma = Marshmallow(app)

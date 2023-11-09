@@ -3,8 +3,14 @@ Flask
 Flask_Migrate
 flask_sqlalchemy
 PyJWT
-PyJWT
 SQLAlchemy
 Werkzeug
 cors 
-flask-cors
+flask-cors 
+Flask_Cors
+flask_marshmallow
+flask_sqlalchemy
+marshmallow
+psycopg2_binary
+SQLAlchemy
+Werkzeug
