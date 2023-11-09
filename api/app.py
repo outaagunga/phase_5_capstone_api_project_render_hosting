@@ -8,6 +8,7 @@ import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 from models.main import app
+from routes.signup_login_route import *
 from routes.deliveries_route import *
 from routes.transactions_route import *
 from routes.inventory_route import *
@@ -22,5 +23,5 @@ from routes.user_route import *
 from models.user import User
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host='0.0.0.0')
+    app.run(debug=True)
+    # app.run(host='0.0.0.0')
