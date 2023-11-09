@@ -143,6 +143,94 @@ def get_all_users():
 
         return jsonify({'users': user_list}, 200)
 
+# Getting single user
+
+
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    if request.method == 'GET':
+        # Query the database to retrieve the user with the specified user_id
+        user = User.query.filter_by(user_id=user_id).first()
+
+        if user is None:
+            return jsonify({'message': 'User not found'}, 404)
+
+        user_data = {
+            'user_id': user.user_id,
+            'username': user.username,
+            'email': user.email,
+            'stored_items': [],
+            'transactions': [],
+            'deliveries': [],
+            'pickups': [],
+            'shipping': [],
+            'receipts': [],
+            'warehouse': []
+        }
+
+        # Collect stored items related to the user
+        for stored_item in user.stored_items:
+            stored_item_data = {
+                'item_id': stored_item.item_id,
+                'item_name': stored_item.item_name,
+                'status': stored_item.status,
+                # Add other stored item fields as needed
+            }
+            user_data['stored_items'].append(stored_item_data)
+
+        # Collect transactions related to the user
+        for transaction in user.transactions:
+            transaction_data = {
+                'transaction_id': transaction.transaction_id,
+                'type': transaction.type,
+                'timestamp': transaction.timestamp,
+                # Add other transaction fields as needed
+            }
+            user_data['transactions'].append(transaction_data)
+
+        # Collect deliveries related to the user
+        for delivery in user.deliveries:
+            delivery_data = {
+                'delivery_id': delivery.delivery_id,
+                'delivery_address': delivery.delivery_address,
+                'delivery_status': delivery.delivery_status,
+                # Add other delivery fields as needed
+            }
+            user_data['deliveries'].append(delivery_data)
+
+        # Collect pickups related to the user
+        for pickup in user.pickups:
+            pickup_data = {
+                'pickup_id': pickup.pickup_id,
+                'pickup_address': pickup.pickup_address,
+                'pickup_status': pickup.pickup_status,
+                # Add other pickup fields as needed
+            }
+            user_data['pickups'].append(pickup_data)
+
+        # Collect shipping related to the user
+        for shipping in user.shipping:
+            shipping_data = {
+                'shipping_id': shipping.shipping_id,
+                'shipping_address': shipping.shipping_address,
+                'shipping_status': shipping.shipping_status,
+                # Add other shipping fields as needed
+            }
+            user_data['shipping'].append(shipping_data)
+
+        # Collect receipts related to the user
+        for receipt in user.receipts:
+            receipt_data = {
+                'receipt_id': receipt.receipt_id,
+                'receipt_type': receipt.receipt_type,
+                'timestamp': receipt.timestamp,
+                'amount': receipt.amount,
+                # Add other receipt fields as needed
+            }
+            user_data['receipts'].append(receipt_data)
+
+        return jsonify({'user': user_data}, 200)
+
 
 # # Route to get single user
 # @app.route('/user/<int:user_id>', methods=['GET'])

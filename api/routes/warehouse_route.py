@@ -65,3 +65,23 @@ def get_available_warehouse_spaces():
             space_list.append(space_data)
 
         return jsonify({'available_spaces': space_list})
+# Getting a single ware house details
+
+
+@app.route('/spaces/<int:space_id>', methods=['GET'])
+def get_single_warehouse_space(space_id):
+    if request.method == 'GET':
+        # Query the database to retrieve the warehouse space with the specified space_id
+        warehouse_space = WarehouseSpace.query.get(space_id)
+
+        if warehouse_space is None:
+            return jsonify({'message': 'Warehouse space not found'}, 404)
+
+        warehouse_space_data = {
+            'space_id': warehouse_space.space_id,
+            'capacity': warehouse_space.capacity,
+            'size': warehouse_space.size,
+            # Add other space-related fields as needed
+        }
+
+        return jsonify(warehouse_space_data)

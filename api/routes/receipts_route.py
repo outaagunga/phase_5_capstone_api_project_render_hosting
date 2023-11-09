@@ -88,3 +88,26 @@ def get_all_receipts():
             })
 
         return jsonify(receipts_list)
+
+
+# Getting a single receipt
+@app.route('/receipts/<int:receipt_id>', methods=['GET'])
+def get_single_receipt(receipt_id):
+    if request.method == 'GET':
+        # Query the database to retrieve the receipt with the specified receipt_id
+        receipt = Receipt.query.get(receipt_id)
+
+        if receipt is None:
+            return jsonify({'message': 'Receipt not found'}, 404)
+
+        receipt_data = {
+            'receipt_id': receipt.receipt_id,
+            'user_id': receipt.user_id,
+            'transaction_id': receipt.transaction_id,
+            'receipt_type': receipt.receipt_type,
+            'timestamp': receipt.timestamp.isoformat(),  # Convert datetime to ISO format
+            'amount': receipt.amount,
+            # Add other fields from the Receipt model as needed
+        }
+
+        return jsonify(receipt_data)

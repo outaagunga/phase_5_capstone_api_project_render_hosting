@@ -78,3 +78,28 @@ def get_all_stored_items():
             item_list.append(item_data)
 
         return jsonify({'stored_items': item_list})
+
+# Getting single stored item
+
+
+@app.route('/stored_items/<int:item_id>', methods=['GET'])
+def get_single_stored_item(item_id):
+    if request.method == 'GET':
+        # Query the database to retrieve the stored item with the specified item_id
+        stored_item = StoredItem.query.get(item_id)
+
+        if stored_item is None:
+            return jsonify({'message': 'Stored item not found'}, 404)
+
+        stored_item_data = {
+            'item_id': stored_item.item_id,
+            'user_id': stored_item.user_id,
+            'space_id': stored_item.space_id,
+            'item_name': stored_item.item_name,
+            'description': stored_item.description,
+            'image': stored_item.image,
+            'status': stored_item.status,
+            # Add other item-related fields as needed
+        }
+
+        return jsonify(stored_item_data)

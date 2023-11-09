@@ -15,6 +15,8 @@ from models.stored_items import StoredItem
 from models.warehouse import WarehouseSpace
 from models.user import User
 
+# Creating shipping
+
 
 @app.route('/shipping', methods=['POST'])
 def create_shipping():
@@ -70,3 +72,25 @@ def get_all_shippings():
             shipping_list.append(shipping_data)
 
         return jsonify({'shippings': shipping_list})
+
+# Getting single shipping records
+
+
+@app.route('/shippings/<int:shipping_id>', methods=['GET'])
+def get_single_shipping(shipping_id):
+    if request.method == 'GET':
+        # Query the database to retrieve the shipping record with the specified shipping_id
+        shipping = Shipping.query.get(shipping_id)
+
+        if shipping is None:
+            return jsonify({'message': 'Shipping record not found'}, 404)
+
+        shipping_data = {
+            'shipping_id': shipping.shipping_id,
+            'user_id': shipping.user_id,
+            'shipping_address': shipping.shipping_address,
+            'shipping_status': shipping.shipping_status,
+            # Include other fields from the Shipping model as needed
+        }
+
+        return jsonify(shipping_data)

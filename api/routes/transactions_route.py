@@ -87,3 +87,26 @@ def get_all_transactions():
         ]
 
         return jsonify(transactions_list)
+
+# Getting single transaction
+
+
+@app.route('/transactions/<int:transaction_id>', methods=['GET'])
+def get_single_transaction(transaction_id):
+    if request.method == 'GET':
+        # Query the database to retrieve the transaction with the specified transaction_id
+        transaction = Transaction.query.get(transaction_id)
+
+        if transaction is None:
+            return jsonify({'message': 'Transaction not found'}, 404)
+
+        transaction_data = {
+            'transaction_id': transaction.transaction_id,
+            'user_id': transaction.user_id,
+            'item_id': transaction.item_id,
+            'type': transaction.type,
+            'timestamp': transaction.timestamp.isoformat(),  # Convert to ISO format
+            # Include other relevant fields as needed
+        }
+
+        return jsonify(transaction_data)

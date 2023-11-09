@@ -67,3 +67,23 @@ def get_all_pickups():
         pickup_list.append(pickup_dict)
 
     return jsonify({'pickups': pickup_list})
+# Getting single pickup
+
+
+@app.route('/pickup/<int:pickup_id>', methods=['GET'])
+def get_single_pickup(pickup_id):
+    # Query the database to retrieve the pickup with the specified pickup_id
+    pickup = Pickup.query.get(pickup_id)
+
+    if pickup is None:
+        return jsonify({'message': 'Pickup not found'}, 404)
+
+    pickup_data = {
+        'pickup_id': pickup.pickup_id,
+        'user_id': pickup.user_id,
+        'pickup_address': pickup.pickup_address,
+        'pickup_status': pickup.pickup_status,
+        # Add other fields from the Pickup model as needed
+    }
+
+    return jsonify(pickup_data)

@@ -15,6 +15,8 @@ from models.stored_items import StoredItem
 from models.warehouse import WarehouseSpace
 from models.user import User
 
+# Creating Delevery
+
 
 @app.route('/delivery', methods=['POST'])
 def create_delivery():
@@ -70,3 +72,24 @@ def get_deliveries():
             delivery_list.append(delivery_dict)
 
         return jsonify(delivery_list)
+# Getting single deleivery
+
+
+@app.route('/deliveries/<int:delivery_id>', methods=['GET'])
+def get_single_delivery(delivery_id):
+    if request.method == 'GET':
+        # Query the database to retrieve the delivery with the specified delivery_id
+        delivery = Delivery.query.filter_by(delivery_id=delivery_id).first()
+
+        if delivery is None:
+            return jsonify({'message': 'Delivery not found'}, 404)
+
+        delivery_data = {
+            'delivery_id': delivery.delivery_id,
+            'user_id': delivery.user_id,
+            'delivery_address': delivery.delivery_address,
+            'delivery_status': delivery.delivery_status,
+            # Add other fields from the Delivery model as needed
+        }
+
+        return jsonify(delivery_data)
