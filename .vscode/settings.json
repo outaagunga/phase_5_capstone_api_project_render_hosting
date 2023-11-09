@@ -3,5 +3,6 @@
     "editor.defaultFormatter": "ms-python.autopep8",
     "python.clearInterpreterCache": true
   },
-  "python.formatting.provider": "none"
+  "python.formatting.provider": "none",
+  "python.analysis.extraPaths": ["./api/models"]
 }

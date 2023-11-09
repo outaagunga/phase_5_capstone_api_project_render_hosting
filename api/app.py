@@ -18,6 +18,7 @@ from routes.shippings_route import *
 from routes.stored_items_route import *
 from routes.warehouse_route import *
 from routes.user_route import *
+from routes.test_signup import *
 
 
 from models.user import User
