@@ -3,7 +3,7 @@ from flask import jsonify, request
 
 from flask import request, jsonify, make_response, session
 import uuid
-from werkzeug.security import generate_password_hash, check_password_hash
+# from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
@@ -18,11 +18,10 @@ from routes.shippings_route import *
 from routes.stored_items_route import *
 from routes.warehouse_route import *
 from routes.user_route import *
-from routes.test_signup import *
 
 
 from models.user import User
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host='0.0.0.0')
+    app.run(debug=True)
+    # app.run(host='0.0.0.0')

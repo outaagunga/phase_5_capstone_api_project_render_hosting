@@ -14,6 +14,9 @@ def signup():
     email = request.form.get('email')
     password = request.form.get('password')
 
+    if password is None:
+        return jsonify({'error': 'Password is missing in the request'}), 400
+
     # Perform data validation (e.g., check for duplicate usernames or emails)
     existing_user = User.query.filter(
         (User.username == username) | (User.email == email)).first()
@@ -22,8 +25,8 @@ def signup():
         error_message = 'Username or email already exists. Please choose a different one.'
         return jsonify({'error': error_message}), 400
 
-    # Hash the password before storing it
-    hashed_password = generate_password_hash(password, method='sha256')
+    # Hash the password using 'pbkdf2:sha256' before storing it
+    hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
     # Create a new user and add it to the database
     new_user = User(username=username, email=email, password=hashed_password)
@@ -36,6 +39,8 @@ def signup():
         return jsonify({'error': error_message}), 500
 
     success_message = 'Registration successful. You can now log in.'
+    # Add this print statement
+    print("User successfully registered:", username)
     return jsonify({'message': success_message})
 
 # Handle GET requests here
@@ -45,172 +50,57 @@ def signup():
 def render_signup_page():
     return render_template('signup.html')
 
-# @app.route('/signup', methods=['GET', 'POST'])
-# def signup():
-#     if request.method == 'POST':
-#         username = request.form.get('username')
-#         email = request.form.get('email')
-#         password = request.form.get('password')
-
-#         # Perform data validation (e.g., check for duplicate usernames or emails)
-#         existing_user = User.query.filter(
-#             (User.username == username) | (User.email == email)).first()
-#         if existing_user:
-#             flash(
-#                 'Username or email already exists. Please choose a different one.', 'danger')
-#             return jsonify({'error': 'Username or email already exists'})
-
-#         # Create a new user and add it to the database
-#         new_user = User(username=username, email=email, password=password)
-#         db.session.add(new_user)
-#         db.session.commit()
-#         flash('Registration successful. You can now log in.', 'success')
-#         # Return the user object as JSON
-#         return jsonify({'user': new_user.to_dict()})
-
-#     # Handle GET requests here
-#     return render_template('signup.html')
-
-# Login riute
+# Login Route (GET)
 
 
+@app.route('/login', methods=['GET'])
+def render_login_page():
+    return render_template('login.html')
+
+
+# # Login route
+# Login route
 @app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+    username = request.form.get('username')
+    password = request.form.get('password')
 
-        user = User.query.filter_by(username=username).first()
-        # Check the hashed password
-        if user and check_password_hash(user.password, password):
-            # Log the user in by storing their user ID in the session
-            session['user_id'] = user.user_id
-            success_message = 'Login successful.'
-            # Return the success message and user object as JSON
-            return jsonify({'message': success_message, 'user': user.to_dict()}), 200
-        else:
-            error_message = 'Login failed. Please check your username and password.'
-            # Return the error message and user object as JSON
-            return jsonify({'error': error_message, 'user': None}), 401
+    print("Received username:", username)
+    print("Received password:", password)
 
-    # Return an error message if the request method is not POST
-    error_message = 'Invalid request method.'
-    return jsonify({'error': error_message, 'user': None}), 400
+    if username is None or password is None:
+        print("Username or password is missing in the request")
+        return jsonify({'error': 'Username or password is missing in the request'}), 400
 
+    # Query the database to find the user by their username
+    user = User.query.filter_by(username=username).first()
 
-# @app.route('/login', methods=['POST'])
-# def login():
-#     if request.method == 'POST':
-#         username = request.form.get('username')
-#         password = request.form.get('password')
+    if user is None:
+        print("User not found")
+        return jsonify({'error': 'User not found'}), 404
 
-#         user = User.query.filter_by(username=username).first()
-#         if user and user.check_password(password):
-#             # Log the user in by storing their user ID in the session
-#             session['user_id'] = user.user_id
-#             flash('Login successful.', 'success')
-#             return redirect('/dashboard')
-#         else:
-#             error_message = 'Login failed. Please check your username and password.'
-#             # Return the error message and user object as JSON
-#             return jsonify({'error': error_message, 'user': None}), 401
+    # Check if the provided password matches the stored hashed password
+    if not check_password_hash(user.password, password):
+        print("Invalid password")
+        return jsonify({'error': 'Invalid password'}), 401
 
-#     # Return an error message if the request method is not POST
-#     error_message = 'Invalid request method.'
-#     return jsonify({'error': error_message, 'user': None}), 400
+    # Successful login
+    success_message = 'Login successful. Welcome, {}!'.format(user.username)
+    print("Successful login for user:", user.username)
+    return jsonify({'message': success_message})
 
 
 # Logout
 
+
 @app.route('/logout')
 def logout():
-    session.pop('user_id', None)
-    flash('Logged out successfully.', 'success')
-    return redirect('/login')
-
-
-# # Login
-# @app.route('/login', methods=['POST'])
-# def login():
-#     if request.method == 'POST':
-#         username = request.form.get('username')
-#         password = request.form.get('password')
-
-#         user = User.query.filter_by(username=username).first()
-#         if user and user.check_password(password):
-#             # Log the user in by storing their user ID in the session
-#             session['user_id'] = user.user_id
-#             flash('Login successful.', 'success')
-#             return redirect('/dashboard')
-#         else:
-#             flash('Login failed. Please check your username and password.', 'danger')
-
-#     return render_template('login.html')
-
-
-# # @app.route('/signup', methods=['GET', 'POST'])
-# def signup():
-#     if request.method == 'POST':
-#         username = request.form.get('username')
-#         email = request.form.get('email')
-#         password = request.form.get('password')
-
-#         # Perform data validation (e.g., check for duplicate usernames or email)
-
-#         # Create a new user and add it to the database
-#         new_user = User(username=username, email=email, password=password)
-#         db.session.add(new_user)
-#         db.session.commit()
-#         flash('Registration successful. You can now log in.', 'success')
-#         return redirect('/login')
-
-#     return render_template('signup.html')
-
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         username = request.form.get('username')
-#         password = request.form.get('password')
-
-#         user = User.query.filter_by(username=username).first()
-#         if user and user.check_password(password):
-#             # Log the user in by storing their user ID in the session
-#             session['user_id'] = user.user_id
-#             flash('Login successful.', 'success')
-#             return redirect('/dashboard')
-#         else:
-#             flash('Login failed. Please check your username and password.', 'danger')
-
-#     return render_template('login.html')
-
-
-# signup
-
-
-# @app.route('/signup', methods=['GET', 'POST'])
-# def signup():
-#     if request.method == 'POST':
-#         username = request.form.get('username')
-#         email = request.form.get('email')
-#         password = request.form.get('password')
-
-#         # Perform data validation (e.g., check for duplicate usernames or emails)
-#         existing_user = User.query.filter(
-#             (User.username == username) | (User.email == email)).first()
-#         if existing_user:
-#             flash(
-#                 'Username or email already exists. Please choose a different one.', 'danger')
-#             return redirect('/signup')
-
-#         # Create a new user and add it to the database
-#         new_user = User(username=username, email=email, password=password)
-#         db.session.add(new_user)
-#         db.session.commit()
-#         flash('Registration successful. You can now log in.', 'success')
-#         return redirect('/login')
-
-#     return render_template('signup.html')
+    if 'user_id' in session:
+        session.pop('user_id')
+        flash('Logged out successfully.', 'success')
+        return jsonify({'message': 'Logged out successfully'}), 200
+    else:
+        return jsonify({'error': 'You are not logged in.'}), 401
 
 
 # # Login form

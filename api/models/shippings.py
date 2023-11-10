@@ -15,4 +15,4 @@ class Shipping(db.Model):
 
     # Define a one-to-many relationship with Transactions
     transactions = db.relationship(
-        'Transaction', back_populates='shipping', lazy=True)
+        'Transaction', back_populates='shipping')

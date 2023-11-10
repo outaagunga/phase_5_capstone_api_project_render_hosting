@@ -21,10 +21,10 @@ class Transaction(db.Model):
 
     stored_item = db.relationship(
         'StoredItem', back_populates='transactions', lazy=True)
-    delivery = db.relationship(
-        'Delivery', backref='transaction', uselist=False)
-    pickup = db.relationship(
-        'Pickup', backref='transaction', uselist=False)
+    # delivery = db.relationship(
+    #     'Delivery', back_populates='transaction', uselist=False)
+    # pickup = db.relationship(
+    #     'Pickup', back_populates='transaction', uselist=False)
     shipping = db.relationship(
-        'Shipping', backref='transaction', uselist=False)
+        'Shipping', back_populates='transactions', uselist=False)
     # user = db.relationship('User', back_populates='user_transactions')

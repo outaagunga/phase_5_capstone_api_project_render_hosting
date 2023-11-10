@@ -14,6 +14,6 @@ class Delivery(db.Model):
     # Add other delivery-related fields here
 
     # Define a one-to-many relationship with Transactions
-    transactions = db.relationship(
-        'Transaction', back_populates='delivery', lazy=True)
+    transactions = db.relationship('Transaction', backref='delivery')
+
     # user = db.relationship('User', back_populates='deliveries')

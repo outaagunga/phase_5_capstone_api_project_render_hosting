@@ -15,4 +15,4 @@ class Pickup(db.Model):
 
     # Define a one-to-many relationship with Transactions
     transactions = db.relationship(
-        'Transaction', back_populates='pickup', lazy=True)
+        'Transaction', backref='pickup', uselist=False)
